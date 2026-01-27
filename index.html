@@ -1,300 +1,300 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choice</title>
 
-    <title>Рейтинг</title>
+<style>
 
-    <style>
+/* ===== RESET ===== */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        :root {
-            --bg: #0f2027;
-            --bg2: #203a43;
-            --text: #ffffff;
-            --card: rgba(255,255,255,0.1);
-            --btn1: #ff416c;
-            --btn2: #ff4b2b;
-        }
+/* ===== THEME ===== */
+:root {
+    --bg: #0b0f1a;
+    --bg2: #141a2e;
+    --card: rgba(255,255,255,0.08);
+    --text: #ffffff;
+    --accent: #ff4b7d;
+}
 
-        body.light {
-            --bg: #f5f7fa;
-            --bg2: #c3cfe2;
-            --text: #111;
-            --card: rgba(0,0,0,0.08);
-            --btn1: #36d1dc;
-            --btn2: #5b86e5;
-        }
+body.light {
+    --bg: #f4f6fb;
+    --bg2: #e3e8f3;
+    --card: rgba(0,0,0,0.06);
+    --text: #111;
+    --accent: #4f7cff;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--bg), var(--bg2));
-            font-family: Arial, sans-serif;
-            color: var(--text);
-            text-align: center;
+/* ===== BODY ===== */
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(180deg, var(--bg), var(--bg2));
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro", Arial, sans-serif;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+}
 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: 0.5s;
-        }
+/* ===== APP ===== */
+.app {
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    padding: 24px 18px env(safe-area-inset-bottom);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        h1 {
-            margin-bottom: 20px;
-        }
+/* ===== TEXT ===== */
+h1 {
+    font-size: 28px;
+    margin-bottom: 24px;
+    text-align: center;
+}
 
-        input, button {
-            padding: 18px;
-            font-size: 18px;
-            border-radius: 30px;
-            border: none;
-            margin: 10px;
-        }
+/* ===== INPUT ===== */
+input {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    border-radius: 18px;
+    border: none;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+}
 
-        input {
-            width: 80%;
-            max-width: 320px;
-        }
+/* ===== BUTTON ===== */
+.start-btn {
+    margin-top: 20px;
+    padding: 18px;
+    font-size: 18px;
+    border-radius: 18px;
+    border: none;
+    background: var(--accent);
+    color: white;
+}
 
-        button {
-            background: linear-gradient(135deg, var(--btn1), var(--btn2));
-            color: white;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+/* ===== BATTLE ===== */
+.battle {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-        button:active {
-            transform: scale(0.94);
-            box-shadow: 0 0 20px rgba(255,255,255,0.4);
-        }
+/* ===== CHOICE CARD ===== */
+.choice {
+    padding: 26px;
+    border-radius: 22px;
+    background: var(--card);
+    font-size: 22px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    transition: transform 0.15s;
+}
 
-        .battle {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 20px;
-        }
+.choice:active {
+    transform: scale(0.96);
+}
 
-        .fade {
-            animation: fade 0.5s ease;
-        }
+/* ===== TOP ===== */
+.place {
+    padding: 24px;
+    border-radius: 22px;
+    background: var(--card);
+    font-size: 22px;
+    margin-bottom: 16px;
+    animation: pop 0.4s ease;
+}
 
-        @keyframes fade {
-            from { opacity: 0; transform: scale(0.95); }
-            to   { opacity: 1; transform: scale(1); }
-        }
+.first {
+    font-size: 30px;
+    box-shadow: 0 0 35px rgba(255,215,0,0.8);
+    animation: winner 1.2s infinite alternate;
+}
 
-        .heart {
-            position: fixed;
-            font-size: 24px;
-            animation: fly 1s linear forwards;
-            pointer-events: none;
-        }
+/* ===== TOGGLE ===== */
+.toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--card);
+    border: none;
+}
 
-        @keyframes fly {
-            from { opacity: 1; transform: translateY(0) scale(1); }
-            to   { opacity: 0; transform: translateY(-120px) scale(1.6); }
-        }
+/* ===== HEART ===== */
+.heart {
+    position: fixed;
+    font-size: 26px;
+    animation: fly 1s ease forwards;
+    pointer-events: none;
+}
 
-        .toggle {
-            position: fixed;
-            top: 14px;
-            right: 14px;
-            padding: 10px 16px;
-            font-size: 14px;
-        }
+/* ===== ANIMATIONS ===== */
+@keyframes fly {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(-120px) scale(1.6); }
+}
 
-        .top {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 20px;
-        }
+@keyframes pop {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
 
-        .place {
-            padding: 20px;
-            border-radius: 20px;
-            background: var(--card);
-            font-size: 22px;
-            animation: pop 0.6s ease;
-        }
+@keyframes winner {
+    from { transform: scale(1); }
+    to   { transform: scale(1.05); }
+}
 
-        .first {
-            font-size: 28px;
-            box-shadow: 0 0 30px gold;
-            animation: winner 1.2s infinite alternate;
-        }
-
-        @keyframes winner {
-            from { transform: scale(1); }
-            to   { transform: scale(1.05); }
-        }
-
-        @keyframes pop {
-            from { opacity: 0; transform: scale(0.8); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-
-    </style>
-
+</style>
 </head>
 
 <body>
 
-    <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+<button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
 
-    <!-- ИМЯ -->
-    <div id="login" class="fade">
+<div class="app">
 
-        <h1>Введите имя</h1>
-        <input id="username" placeholder="Ваше имя">
-        <button onclick="startApp()">Начать</button>
+<!-- LOGIN -->
+<div id="login">
+    <h1>Введите имя</h1>
+    <input id="username" placeholder="Ваше имя">
+    <button class="start-btn" onclick="startApp()">Начать</button>
+</div>
 
-    </div>
+<!-- GAME -->
+<div id="game" style="display:none">
+    <h1>Выберите</h1>
+    <div id="battle" class="battle"></div>
+</div>
 
-    <!-- ВЫБОР -->
-    <div id="game" style="display:none">
+<!-- RESULT -->
+<div id="result" style="display:none"></div>
 
-        <h1>Выберите</h1>
-        <div id="battle" class="battle"></div>
+</div>
 
-    </div>
+<script>
 
-    <!-- РЕЗУЛЬТАТ -->
-    <div id="result" style="display:none"></div>
+let names = [
+    "Селен",
+    "Шахноза",
+    "Мубина",
+    "Ями",
+    "Розия",
+    "Малика",
+    "Аиша"
+];
 
-    <script>
+let ranking = [];
+let userName = "";
 
-        let names = [
-            "Селен",
-            "Шахноза",
-            "Мубина",
-            "Ями",
-            "Розия",
-            "Малика",
-            "Аиша"
-        ];
+/* THEME */
+function toggleTheme() {
+    document.body.classList.toggle("light");
+}
 
-        let ranking = [];
-        let userName = "";
+/* START */
+function startApp() {
+    userName = document.getElementById("username").value.trim();
+    if (!userName) return alert("Введите имя");
 
+    document.getElementById("login").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    nextRound();
+}
 
-        function toggleTheme() {document.body.classList.toggle("light");
-        }
+/* ROUND */function nextRound() {
 
+    if (names.length === 1) {
+        ranking.unshift(names[0]);
+        showTop();
+        sendToGoogle();
+        return;
+    }
 
-        function startApp() {
+    let a = names.shift();
+    let b = names.shift();
 
-            userName =
-                document.getElementById("username").value.trim();
+    let battle = document.getElementById("battle");
+    battle.innerHTML = "";
 
-            if (userName === "") {
-                alert("Введите имя");
-                return;
-            }
+    battle.appendChild(makeChoice(a, b));
+    battle.appendChild(makeChoice(b, a));
+}
 
-            document.getElementById("login").style.display = "none";
-            document.getElementById("game").style.display = "block";
+/* CARD */
+function makeChoice(name, other) {
 
-            nextRound();
-        }
+    let div = document.createElement("div");
+    div.className = "choice";
+    div.innerText = name;
 
+    div.onclick = (e) => {
 
-        function nextRound() {
+        if (navigator.vibrate) navigator.vibrate(30);
 
-            if (names.length === 1) {
+        showHeart(e.clientX, e.clientY);
 
-                ranking.unshift(names[0]);
-                showTop();
-                sendToGoogle();
-                return;
-            }
+        names.push(name);
+        ranking.unshift(other);
 
-            let a = names.shift();
-            let b = names.shift();
+        nextRound();
+    };
 
-            let battle = document.getElementById("battle");
-            battle.innerHTML = "";
+    return div;
+}
 
-            battle.appendChild(makeBtn(a, b));
-            battle.appendChild(makeBtn(b, a));
-        }
+/* HEART */
+function showHeart(x, y) {
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "💖";
+    h.style.left = x + "px";
+    h.style.top = y + "px";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1000);
+}
 
+/* TOP */
+function showTop() {
+    document.getElementById("game").style.display = "none";
+    let r = document.getElementById("result");
+    r.style.display = "block";
 
-        function makeBtn(name, other) {
+    r.innerHTML = `
+        <h1>🏆 Топ 3</h1>
+        <div class="place first">🥇 ${ranking[0]}</div>
+        <div class="place">🥈 ${ranking[1]}</div>
+        <div class="place">🥉 ${ranking[2]}</div>
+    `;
+}
 
-            let btn = document.createElement("button");
-            btn.innerText = name;
-            btn.className = "fade";
+/* GOOGLE */
+function sendToGoogle() {
 
-            btn.onclick = function (e) {
+    let url = "https://docs.google.com/forms/d/e/1FAIpQLSdjxIqr3wttTjMFRQH99vHdvNEHALEA1oOI8rU_n-vE0-5W0Q/formResponse";
 
-                showHeart(e.clientX, e.clientY);
+    let data = new FormData();
+    data.append("entry.2137641526", userName);
+    data.append("entry.42689067", ranking.join(" → "));
 
-                names.push(name);
-                ranking.unshift(other);
+    fetch(url, { method: "POST", mode: "no-cors", body: data });
+}
 
-                nextRound();
-            };
-
-            return btn;
-        }
-
-
-        function showHeart(x, y) {
-
-            let h = document.createElement("div");
-            h.className = "heart";
-            h.innerText = "💖";
-
-            h.style.left = x + "px";
-            h.style.top = y + "px";
-
-            document.body.appendChild(h);
-
-            setTimeout(() => h.remove(), 1000);
-        }
-
-
-        function showTop() {
-
-            document.getElementById("game").style.display = "none";
-            let r = document.getElementById("result");
-            r.style.display = "block";
-
-            r.innerHTML = `
-                <h1 class="fade">🏆 Топ 3</h1>
-
-                <div class="top">
-                    <div class="place first">🥇 ${ranking[0]}</div>
-                    <div class="place">🥈 ${ranking[1]}</div>
-                    <div class="place">🥉 ${ranking[2]}</div>
-                </div>
-            `;
-        }
-
-
-        function sendToGoogle() {
-
-            let formUrl =
-                "https://docs.google.com/forms/d/e/1FAIpQLSdjxIqr3wttTjMFRQH99vHdvNEHALEA1oOI8rU_n-vE0-5W0Q/formResponse";
-
-            let data = new FormData();
-
-            data.append("entry.2137641526", userName);
-            data.append("entry.42689067", ranking.join(" → "));
-
-            fetch(formUrl, {
-                method: "POST",
-                mode: "no-cors",
-                body: data
-            });
-        }
-
-    </script>
+</script>
 
 </body>
 </html>

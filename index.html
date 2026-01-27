@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choice</title>
+
+<style>
+/* ===== ОБЫЧНЫЙ СТИЛЬ ===== */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0e0e0e;
+    color: white;
+    text-align: center;
+}
+
+.card {
+    background: #1a1a1a;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+button, input {
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+}
+
+button {
+    margin-top: 16px;
+    cursor: pointer;
+}
+
+.choice {
+    padding: 20px;
+    margin: 16px;
+    background: #222;
+    border-radius: 16px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* ===== НЕОНОВЫЙ СТИЛЬ (АДМИН) ===== */
+.admin body,
+body.admin {
+    background: #050510;
+}
+
+.admin .card {
+    background: #0b0b1e;
+    box-shadow: 0 0 20px #ff2bdc;
+}
+
+.admin h1 {
+    text-shadow: 0 0 20px #ff2bdc;
+}
+
+.admin .choice {
+    box-shadow: 0 0 20px #00fff0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px #00fff0; }
+    50% { box-shadow: 0 0 30px #ff2bdc; }
+    100% { box-shadow: 0 0 10px #00fff0; }
+}
+
+.heart {
+    position: fixed;
+    font-size: 24px;
+    animation: fly 1s ease-out forwards;
+}
+
+@keyframes fly {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-100px); }
+}
+
+.top1 { color: gold; font-size: 26px; }
+.top2 { color: silver; }
+.top3 { color: #cd7f32; }
+</style>
+</head>
+
+<body>
+
+<div id="login" class="card">
+    <h1>Введите имя</h1>
+    <input id="nameInput" placeholder="Имя">
+    <br>
+    <button onclick="start()">Начать</button>
+</div>
+
+<div id="game"></div>
+<div id="result"></div>
+<div id="admin"></div>
+
+<script>
+/* ===== ДАННЫЕ ===== */
+const girls = ["Селен","Шахноза","Мубина","Ями","Розия","Малика","Аиша"];
+const boys  = ["Азизбек","Абдуллох","Исроил","Асадбек","Тимур","Имран","Исфандиор","Борис"];
+const ADMIN = "Yamakas1";
+
+let user = "";
+let pool = [];
+let places = [];
+let allResults = JSON.parse(localStorage.getItem("allResults")) || [];
+
+/* ===== СТАРТ ===== */
+function start() {
+    user = document.getElementById("nameInput").value.trim();
+
+    if (!user) return;
+
+    if (user === ADMIN) {
+        document.body.classList.add("admin");
+        showAdmin();
+        return;
+    }
+
+    if (girls.includes(user)) {
+        pool = [...boys];
+    } else if (boys.includes(user)) {
+        pool = [...girls];
+    } else {
+        alert("Имя не разрешено");
+        return;
+    }
+
+    places = [];
+    document.getElementById("login").style.display = "none";
+    nextRound();
+}
+
+/* ===== ИГРА ===== */
+function nextRound() {
+    if (pool.length === 1) {
+        places.unshift(pool[0]);
+        saveResult();
+        showResult();
+        return;
+    }
+
+    let a = pool.shift();
+    let b = pool.shift();
+
+    document.getElementById("game").innerHTML = `
+        <div class="choice" onclick="pick('${a}','${b}')">${a}</div>
+        <div class="choice" onclick="pick('${b}','${a}')">${b}</div>
+    `;
+}
+
+function pick(win, lose) {
+    pool.push(win);
+    places.unshift(lose);
+    heart();
+    nextRound();
+}
+
+/* ===== ЭФФЕКТ ===== */
+function heart() {
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "💖";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.top = "70%";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1000);
+}
+
+/* ===== РЕЗУЛЬТАТ ===== */
+function showResult() {
+    let html = "<h1>🏆 Топ 3</h1>";
+
+    places.slice(0,3).forEach((n,i)=>{
+        html += <div class="card top${i+1}">${i+1}. ${n}</div>;
+    });
+
+    document.getElementById("game").innerHTML = "";
+    document.getElementById("result").innerHTML = html;
+}
+
+function saveResult() {
+    allResults.push({
+        user: user,
+        ranking: places,
+        time: new Date().toLocaleString()
+    });
+    localStorage.setItem("allResults", JSON.stringify(allResults));
+}
+
+/* ===== АДМИН ===== */
+function showAdmin() {
+    document.getElementById("login").style.display = "none";
+
+    let html = "<h1>👑 Админ-панель</h1>";
+
+    allResults.forEach(r=>{
+        html += `
+            <div class="card">
+                <b>${r.user}</b><br>
+                ${r.time}
+                <ol>
+                    ${r.ranking.map(x=>`<li>${x}</li>`).join("")}
+                </ol>
+            </div>
+        `;
+    });
+
+    document.getElementById("admin").innerHTML = html;
+}
+</script>
+
+</body>
+</html>

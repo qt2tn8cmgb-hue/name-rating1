@@ -1,220 +1,348 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Choice</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choice</title>
 
-<style>
-/* ===== ОБЫЧНЫЙ СТИЛЬ ===== */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0e0e0e;
-    color: white;
-    text-align: center;
-}
+    <style>
 
-.card {
-    background: #1a1a1a;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 16px;
-}
+        /* ===== ОСНОВНОЙ СТИЛЬ ===== */
 
-button, input {
-    padding: 14px;
-    font-size: 16px;
-    border-radius: 12px;
-    border: none;
-    outline: none;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0e0e0e;
+            color: white;
+            text-align: center;
+        }
 
-button {
-    margin-top: 16px;
-    cursor: pointer;
-}
+        h1 {
+            margin-top: 20px;
+        }
 
-.choice {
-    padding: 20px;
-    margin: 16px;
-    background: #222;
-    border-radius: 16px;
-    font-size: 22px;
-    cursor: pointer;
-}
+        .card {
+            background: #1a1a1a;
+            margin: 20px;
+            padding: 24px;
+            border-radius: 16px;
+        }
 
-/* ===== НЕОНОВЫЙ СТИЛЬ (АДМИН) ===== */
-.admin body,
-body.admin {
-    background: #050510;
-}
+        input,
+        button {
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+        }
 
-.admin .card {
-    background: #0b0b1e;
-    box-shadow: 0 0 20px #ff2bdc;
-}
+        button {
+            margin-top: 16px;
+            cursor: pointer;
+            background: #2a2a2a;
+            color: white;
+        }
 
-.admin h1 {
-    text-shadow: 0 0 20px #ff2bdc;
-}
+        .choice {
+            padding: 22px;
+            margin: 16px;
+            background: #222;
+            border-radius: 16px;
+            font-size: 22px;
+            cursor: pointer;
+        }
 
-.admin .choice {
-    box-shadow: 0 0 20px #00fff0;
-    animation: pulse 2s infinite;
-}
+        /* ===== НЕОНОВЫЙ СТИЛЬ (ТОЛЬКО АДМИН) ===== */
 
-@keyframes pulse {
-    0% { box-shadow: 0 0 10px #00fff0; }
-    50% { box-shadow: 0 0 30px #ff2bdc; }
-    100% { box-shadow: 0 0 10px #00fff0; }
-}
+        body.admin {
+            background: #050510;
+        }
 
-.heart {
-    position: fixed;
-    font-size: 24px;
-    animation: fly 1s ease-out forwards;
-}
+        body.admin .card {
+            background: #0b0b1e;
+            box-shadow: 0 0 20px #ff2bdc;
+        }
 
-@keyframes fly {
-    from { opacity: 1; transform: translateY(0); }
-    to { opacity: 0; transform: translateY(-100px); }
-}
+        body.admin h1 {
+            text-shadow: 0 0 20px #ff2bdc;
+        }
 
-.top1 { color: gold; font-size: 26px; }
-.top2 { color: silver; }
-.top3 { color: #cd7f32; }
-</style>
+        body.admin .choice {
+            box-shadow: 0 0 20px #00fff0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 10px #00fff0; }
+            50%  { box-shadow: 0 0 30px #ff2bdc; }
+            100% { box-shadow: 0 0 10px #00fff0; }
+        }
+
+        /* ===== ЭФФЕКТ СЕРДЕЧЕК ===== */
+
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            animation: fly 1s ease-out forwards;
+        }
+
+        @keyframes fly {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+
+        /* ===== ТОП 3 ===== */
+
+        .top1 {
+            color: gold;
+            font-size: 26px;
+        }
+
+        .top2 {
+            color: silver;
+        }
+
+        .top3 {
+            color: #cd7f32;
+        }
+
+    </style>
 </head>
 
 <body>
 
-<div id="login" class="card">
-    <h1>Введите имя</h1>
-    <input id="nameInput" placeholder="Имя">
-    <br>
-    <button onclick="start()">Начать</button>
-</div>
+    <!-- ===== ВХОД ===== -->
 
-<div id="game"></div>
-<div id="result"></div>
-<div id="admin"></div>
+    <div id="login" class="card">
+        <h1>Введите имя</h1>
 
-<script>
-/* ===== ДАННЫЕ ===== */
-const girls = ["Селен","Шахноза","Мубина","Ями","Розия","Малика","Аиша"];
-const boys  = ["Азизбек","Абдуллох","Исроил","Асадбек","Тимур","Имран","Исфандиор","Борис"];
-const ADMIN = "Yamakas1";
+        <input
+            id="nameInput"
+            placeholder="Имя"
+        >
 
-let user = "";
-let pool = [];
-let places = [];
-let allResults = JSON.parse(localStorage.getItem("allResults")) || [];
+        <br>
 
-/* ===== СТАРТ ===== */
-function start() {
-    user = document.getElementById("nameInput").value.trim();
+        <button onclick="start()">
+            Начать
+        </button>
+    </div>
 
-    if (!user) return;
+    <!-- ===== ИГРА / РЕЗУЛЬТАТ / АДМИН ===== -->
 
-    if (user === ADMIN) {
-        document.body.classList.add("admin");
-        showAdmin();
-        return;
-    }
+    <div id="game"></div>
+    <div id="result"></div>
+    <div id="admin"></div>
 
-    if (girls.includes(user)) {
-        pool = [...boys];
-    } else if (boys.includes(user)) {
-        pool = [...girls];
-    } else {
-        alert("Имя не разрешено");
-        return;
-    }
+    <script>
 
-    places = [];
-    document.getElementById("login").style.display = "none";
-    nextRound();
-}
+        /* ===== ДАННЫЕ ===== */
 
-/* ===== ИГРА ===== */
-function nextRound() {
-    if (pool.length === 1) {
-        places.unshift(pool[0]);
-        saveResult();
-        showResult();
-        return;
-    }
+        const girls = [
+            "Селен",
+            "Шахноза",
+            "Мубина",
+            "Ями",
+            "Розия",
+            "Малика",
+            "Аиша"
+        ];
 
-    let a = pool.shift();
-    let b = pool.shift();
+        const boys = [
+            "Азизбек",
+            "Абдуллох",
+            "Исроил",
+            "Асадбек",
+            "Тимур",
+            "Имран",
+            "Исфандиор",
+            "Борис"
+        ];
 
-    document.getElementById("game").innerHTML = `
-        <div class="choice" onclick="pick('${a}','${b}')">${a}</div>
-        <div class="choice" onclick="pick('${b}','${a}')">${b}</div>
-    `;
-}
+        const ADMIN = "Yamakas1";
 
-function pick(win, lose) {
-    pool.push(win);
-    places.unshift(lose);
-    heart();
-    nextRound();
-}
+        let user        = "";
+        let pool        = [];
+        let places      = [];
+        let allResults  =
+            JSON.parse(
+                localStorage.getItem("allResults")
+            ) || [];
 
-/* ===== ЭФФЕКТ ===== */
-function heart() {
-    let h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "💖";
-    h.style.left = Math.random() * 100 + "%";
-    h.style.top = "70%";
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 1000);
-}
+        /* ===== СТАРТ ===== */
 
-/* ===== РЕЗУЛЬТАТ ===== */
-function showResult() {
-    let html = "<h1>🏆 Топ 3</h1>";
+        function start() {
 
-    places.slice(0,3).forEach((n,i)=>{
-        html += <div class="card top${i+1}">${i+1}. ${n}</div>;
-    });
+            user =
+                document
+                    .getElementById("nameInput")
+                    .value
+                    .trim();
 
-    document.getElementById("game").innerHTML = "";
-    document.getElementById("result").innerHTML = html;
-}
+            if (!user) return;
 
-function saveResult() {
-    allResults.push({
-        user: user,
-        ranking: places,
-        time: new Date().toLocaleString()
-    });
-    localStorage.setItem("allResults", JSON.stringify(allResults));
-}
+            if (user === ADMIN) {
 
-/* ===== АДМИН ===== */
-function showAdmin() {
-    document.getElementById("login").style.display = "none";
+                document.body.classList.add("admin");
 
-    let html = "<h1>👑 Админ-панель</h1>";
+                document.getElementById("login").style.display = "none";
 
-    allResults.forEach(r=>{
-        html += `
-            <div class="card">
-                <b>${r.user}</b><br>
-                ${r.time}
-                <ol>
-                    ${r.ranking.map(x=>`<li>${x}</li>`).join("")}
-                </ol>
-            </div>
-        `;
-    });
+                showAdmin();
+                return;
+            }
 
-    document.getElementById("admin").innerHTML = html;
-}
-</script>
+            if (girls.includes(user)) {
+
+                pool = [...boys];
+
+            } else if (boys.includes(user)) {
+
+                pool = [...girls];
+
+            } else {
+
+                alert("Имя не разрешено");
+                return;
+            }
+
+            places = [];
+
+            document.getElementById("login").style.display = "none";
+
+            nextRound();
+        }
+
+        /* ===== ИГРА ===== */
+
+        function nextRound() {
+
+            if (pool.length === 1) {
+
+                places.unshift(pool[0]);
+
+                saveResult();
+                showResult();
+                return;
+            }
+
+            let first  = pool.shift();
+            let second = pool.shift();
+
+            document.getElementById("game").innerHTML = `
+                <div
+                    class="choice"
+                    onclick="pick('${first}', '${second}')"
+                >
+                    ${first}
+                </div>
+
+                <div
+                    class="choice"
+                    onclick="pick('${second}', '${first}')"
+                >
+                    ${second}
+                </div>
+            `;
+        }
+
+        function pick(winner, loser) {
+
+            pool.push(winner);
+            places.unshift(loser);
+
+            heart();
+            nextRound();
+        }
+
+        /* ===== СЕРДЕЧКИ ===== */
+
+        function heart() {
+
+            let h = document.createElement("div");
+
+            h.className = "heart";
+            h.innerText = "💖";
+
+            h.style.left = Math.random() * 100 + "%";
+            h.style.top  = "70%";
+
+            document.body.appendChild(h);
+
+            setTimeout(
+                () => h.remove(),
+                1000
+            );
+        }
+
+        /* ===== РЕЗУЛЬТАТ ===== */
+
+        function showResult() {
+
+            let html = "<h1>🏆 Топ 3</h1>";
+
+            places
+                .slice(0, 3)
+                .forEach((name, index) => {
+
+                    html += `
+                        <div class="card top${index + 1}">
+                            ${index + 1}. ${name}
+                        </div>
+                    `;
+                });
+
+            document.getElementById("game").innerHTML   = "";
+            document.getElementById("result").innerHTML = html;
+        }
+
+        function saveResult() {
+
+            allResults.push({
+                user: user,
+                ranking: places,
+                time: new Date().toLocaleString()
+            });
+
+            localStorage.setItem(
+                "allResults",
+                JSON.stringify(allResults)
+            );
+        }
+
+        /* ===== АДМИН ===== */
+
+        function showAdmin() {
+
+            let html = "<h1>👑 Админ-панель</h1>";
+
+            allResults.forEach(result => {
+
+                html += `
+                    <div class="card">
+                        <b>${result.user}</b>
+                        <br>
+                        ${result.time}
+                        <ol>
+                            ${result.ranking
+                                .map(name => `<li>${name}</li>`)
+                                .join("")}
+                        </ol>
+                    </div>
+                `;
+            });
+
+            document.getElementById("admin").innerHTML = html;
+        }
+
+    </script>
 
 </body>
 </html>

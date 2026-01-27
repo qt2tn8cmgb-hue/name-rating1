@@ -2,151 +2,173 @@
 <html lang="ru">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choice</title>
+
+    <title>Рейтинг</title>
 
     <style>
 
-        /* ===== ОСНОВНОЙ СТИЛЬ ===== */
+        :root {
+            --bg: #0f2027;
+            --bg2: #203a43;
+            --text: #ffffff;
+            --card: rgba(255,255,255,0.1);
+            --btn1: #ff416c;
+            --btn2: #ff4b2b;
+        }
+
+        body.light {
+            --bg: #f5f7fa;
+            --bg2: #c3cfe2;
+            --text: #111;
+            --card: rgba(0,0,0,0.08);
+            --btn1: #36d1dc;
+            --btn2: #5b86e5;
+        }
 
         body {
             margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg), var(--bg2));
             font-family: Arial, sans-serif;
-            background: #0e0e0e;
-            color: white;
+            color: var(--text);
             text-align: center;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: 0.5s;
         }
 
         h1 {
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
-        .card {
-            background: #1a1a1a;
-            margin: 20px;
-            padding: 24px;
-            border-radius: 16px;
-        }
-
-        input,
-        button {
-            padding: 14px;
-            font-size: 16px;
-            border-radius: 12px;
+        input, button {
+            padding: 18px;
+            font-size: 18px;
+            border-radius: 30px;
             border: none;
-            outline: none;
+            margin: 10px;
+        }
+
+        input {
+            width: 80%;
+            max-width: 320px;
         }
 
         button {
-            margin-top: 16px;
-            cursor: pointer;
-            background: #2a2a2a;
+            background: linear-gradient(135deg, var(--btn1), var(--btn2));
             color: white;
-        }
-
-        .choice {
-            padding: 22px;
-            margin: 16px;
-            background: #222;
-            border-radius: 16px;
-            font-size: 22px;
             cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        /* ===== НЕОНОВЫЙ СТИЛЬ (ТОЛЬКО АДМИН) ===== */
-
-        body.admin {
-            background: #050510;
+        button:active {
+            transform: scale(0.94);
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
         }
 
-        body.admin .card {
-            background: #0b0b1e;
-            box-shadow: 0 0 20px #ff2bdc;
+        .battle {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
         }
 
-        body.admin h1 {
-            text-shadow: 0 0 20px #ff2bdc;
+        .fade {
+            animation: fade 0.5s ease;
         }
 
-        body.admin .choice {
-            box-shadow: 0 0 20px #00fff0;
-            animation: pulse 2s infinite;
+        @keyframes fade {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
         }
-
-        @keyframes pulse {
-            0%   { box-shadow: 0 0 10px #00fff0; }
-            50%  { box-shadow: 0 0 30px #ff2bdc; }
-            100% { box-shadow: 0 0 10px #00fff0; }
-        }
-
-        /* ===== ЭФФЕКТ СЕРДЕЧЕК ===== */
 
         .heart {
             position: fixed;
             font-size: 24px;
-            animation: fly 1s ease-out forwards;
+            animation: fly 1s linear forwards;
+            pointer-events: none;
         }
 
         @keyframes fly {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to   { opacity: 0; transform: translateY(-120px) scale(1.6); }
         }
 
-        /* ===== ТОП 3 ===== */
-
-        .top1 {
-            color: gold;
-            font-size: 26px;
+        .toggle {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            padding: 10px 16px;
+            font-size: 14px;
         }
 
-        .top2 {
-            color: silver;
+        .top {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
         }
 
-        .top3 {
-            color: #cd7f32;
+        .place {
+            padding: 20px;
+            border-radius: 20px;
+            background: var(--card);
+            font-size: 22px;
+            animation: pop 0.6s ease;
+        }
+
+        .first {
+            font-size: 28px;
+            box-shadow: 0 0 30px gold;
+            animation: winner 1.2s infinite alternate;
+        }
+
+        @keyframes winner {
+            from { transform: scale(1); }
+            to   { transform: scale(1.05); }
+        }
+
+        @keyframes pop {
+            from { opacity: 0; transform: scale(0.8); }
+            to   { opacity: 1; transform: scale(1); }
         }
 
     </style>
+
 </head>
 
 <body>
 
-    <!-- ===== ВХОД ===== -->
+    <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
 
-    <div id="login" class="card">
+    <!-- ИМЯ -->
+    <div id="login" class="fade">
+
         <h1>Введите имя</h1>
+        <input id="username" placeholder="Ваше имя">
+        <button onclick="startApp()">Начать</button>
 
-        <input
-            id="nameInput"
-            placeholder="Имя"
-        >
-
-        <br>
-
-        <button onclick="start()">
-            Начать
-        </button>
     </div>
 
-    <!-- ===== ИГРА / РЕЗУЛЬТАТ / АДМИН ===== -->
+    <!-- ВЫБОР -->
+    <div id="game" style="display:none">
 
-    <div id="game"></div>
-    <div id="result"></div>
-    <div id="admin"></div>
+        <h1>Выберите</h1>
+        <div id="battle" class="battle"></div>
+
+    </div>
+
+    <!-- РЕЗУЛЬТАТ -->
+    <div id="result" style="display:none"></div>
 
     <script>
 
-        /* ===== ДАННЫЕ ===== */
-
-        const girls = [
+        let names = [
             "Селен",
             "Шахноза",
             "Мубина",
@@ -156,190 +178,120 @@
             "Аиша"
         ];
 
-        const boys = [
-            "Азизбек",
-            "Абдуллох",
-            "Исроил",
-            "Асадбек",
-            "Тимур",
-            "Имран",
-            "Исфандиор",
-            "Борис"
-        ];
+        let ranking = [];
+        let userName = "";
 
-        const ADMIN = "Yamakas1";
 
-        let user        = "";
-        let pool        = [];
-        let places      = [];
-        let allResults  =
-            JSON.parse(
-                localStorage.getItem("allResults")
-            ) || [];
+        function toggleTheme() {document.body.classList.toggle("light");
+        }
 
-        /* ===== СТАРТ ===== */
 
-        function start() {
+        function startApp() {
 
-            user =
-                document
-                    .getElementById("nameInput")
-                    .value
-                    .trim();
+            userName =
+                document.getElementById("username").value.trim();
 
-            if (!user) return;
-
-            if (user === ADMIN) {
-
-                document.body.classList.add("admin");
-
-                document.getElementById("login").style.display = "none";
-
-                showAdmin();
+            if (userName === "") {
+                alert("Введите имя");
                 return;
             }
-
-            if (girls.includes(user)) {
-
-                pool = [...boys];
-
-            } else if (boys.includes(user)) {
-
-                pool = [...girls];
-
-            } else {
-
-                alert("Имя не разрешено");
-                return;
-            }
-
-            places = [];
 
             document.getElementById("login").style.display = "none";
+            document.getElementById("game").style.display = "block";
 
             nextRound();
         }
 
-        /* ===== ИГРА ===== */
 
         function nextRound() {
 
-            if (pool.length === 1) {
+            if (names.length === 1) {
 
-                places.unshift(pool[0]);
-
-                saveResult();
-                showResult();
+                ranking.unshift(names[0]);
+                showTop();
+                sendToGoogle();
                 return;
             }
 
-            let first  = pool.shift();
-            let second = pool.shift();
+            let a = names.shift();
+            let b = names.shift();
 
-            document.getElementById("game").innerHTML = `
-                <div
-                    class="choice"
-                    onclick="pick('${first}', '${second}')"
-                >
-                    ${first}
-                </div>
+            let battle = document.getElementById("battle");
+            battle.innerHTML = "";
 
-                <div
-                    class="choice"
-                    onclick="pick('${second}', '${first}')"
-                >
-                    ${second}
+            battle.appendChild(makeBtn(a, b));
+            battle.appendChild(makeBtn(b, a));
+        }
+
+
+        function makeBtn(name, other) {
+
+            let btn = document.createElement("button");
+            btn.innerText = name;
+            btn.className = "fade";
+
+            btn.onclick = function (e) {
+
+                showHeart(e.clientX, e.clientY);
+
+                names.push(name);
+                ranking.unshift(other);
+
+                nextRound();
+            };
+
+            return btn;
+        }
+
+
+        function showHeart(x, y) {
+
+            let h = document.createElement("div");
+            h.className = "heart";
+            h.innerText = "💖";
+
+            h.style.left = x + "px";
+            h.style.top = y + "px";
+
+            document.body.appendChild(h);
+
+            setTimeout(() => h.remove(), 1000);
+        }
+
+
+        function showTop() {
+
+            document.getElementById("game").style.display = "none";
+            let r = document.getElementById("result");
+            r.style.display = "block";
+
+            r.innerHTML = `
+                <h1 class="fade">🏆 Топ 3</h1>
+
+                <div class="top">
+                    <div class="place first">🥇 ${ranking[0]}</div>
+                    <div class="place">🥈 ${ranking[1]}</div>
+                    <div class="place">🥉 ${ranking[2]}</div>
                 </div>
             `;
         }
 
-        function pick(winner, loser) {
 
-            pool.push(winner);
-            places.unshift(loser);
+        function sendToGoogle() {
 
-            heart();
-            nextRound();
-        }
+            let formUrl =
+                "https://docs.google.com/forms/d/e/1FAIpQLSdjxIqr3wttTjMFRQH99vHdvNEHALEA1oOI8rU_n-vE0-5W0Q/formResponse";
 
-        /* ===== СЕРДЕЧКИ ===== */
+            let data = new FormData();
 
-        function heart() {
+            data.append("entry.2137641526", userName);
+            data.append("entry.42689067", ranking.join(" → "));
 
-            let h = document.createElement("div");
-
-            h.className = "heart";
-            h.innerText = "💖";
-
-            h.style.left = Math.random() * 100 + "%";
-            h.style.top  = "70%";
-
-            document.body.appendChild(h);
-
-            setTimeout(
-                () => h.remove(),
-                1000
-            );
-        }
-
-        /* ===== РЕЗУЛЬТАТ ===== */
-
-        function showResult() {
-
-            let html = "<h1>🏆 Топ 3</h1>";
-
-            places
-                .slice(0, 3)
-                .forEach((name, index) => {
-
-                    html += `
-                        <div class="card top${index + 1}">
-                            ${index + 1}. ${name}
-                        </div>
-                    `;
-                });
-
-            document.getElementById("game").innerHTML   = "";
-            document.getElementById("result").innerHTML = html;
-        }
-
-        function saveResult() {
-
-            allResults.push({
-                user: user,
-                ranking: places,
-                time: new Date().toLocaleString()
+            fetch(formUrl, {
+                method: "POST",
+                mode: "no-cors",
+                body: data
             });
-
-            localStorage.setItem(
-                "allResults",
-                JSON.stringify(allResults)
-            );
-        }
-
-        /* ===== АДМИН ===== */
-
-        function showAdmin() {
-
-            let html = "<h1>👑 Админ-панель</h1>";
-
-            allResults.forEach(result => {
-
-                html += `
-                    <div class="card">
-                        <b>${result.user}</b>
-                        <br>
-                        ${result.time}
-                        <ol>
-                            ${result.ranking
-                                .map(name => `<li>${name}</li>`)
-                                .join("")}
-                        </ol>
-                    </div>
-                `;
-            });
-
-            document.getElementById("admin").innerHTML = html;
         }
 
     </script>

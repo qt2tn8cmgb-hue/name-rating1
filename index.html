@@ -14,7 +14,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== THEME ===== */
+/* ===== THEMES ===== */
 :root {
     --bg: #0b0f1a;
     --bg2: #141a2e;
@@ -44,7 +44,7 @@ body {
     transition: 0.4s;
 }
 
-/* ===== APP ===== */
+/* ===== APP CONTAINER ===== */
 .app {
     width: 100%;
     max-width: 420px;
@@ -74,7 +74,7 @@ input {
     outline: none;
 }
 
-/* ===== BUTTON ===== */
+/* ===== START BUTTON ===== */
 .start-btn {
     margin-top: 20px;
     padding: 18px;
@@ -99,13 +99,34 @@ input {
     background: var(--card);
     font-size: 22px;
     text-align: center;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    transition: transform 0.15s;
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .choice:active {
     transform: scale(0.96);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+/* ===== TOGGLE ===== */
+.toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--card);
+    border: none;
+    color: var(--text);
+}
+
+/* ===== HEART ===== */
+.heart {
+    position: fixed;
+    font-size: 26px;
+    animation: fly 1s ease forwards;
+    pointer-events: none;
 }
 
 /* ===== TOP ===== */
@@ -122,25 +143,6 @@ input {
     font-size: 30px;
     box-shadow: 0 0 35px rgba(255,215,0,0.8);
     animation: winner 1.2s infinite alternate;
-}
-
-/* ===== TOGGLE ===== */
-.toggle {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: var(--card);
-    border: none;
-}
-
-/* ===== HEART ===== */
-.heart {
-    position: fixed;
-    font-size: 26px;
-    animation: fly 1s ease forwards;
-    pointer-events: none;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -188,45 +190,43 @@ input {
 
 <script>
 
-let names = [
-    "Селен",
-    "Шахноза",
-    "Мубина",
-    "Ями",
-    "Розия",
-    "Малика",
-    "Аиша"
-];
+/* ===== NAMES ===== */
+const girls = ["Селен","Шахноза","Мубина","Ями","Розия","Малика","Аиша"];
+const boys  = ["Азизбек","Абдуллох","Исроил","Асадбек","Тимур","Имран","Исфандиор","Борис"];
 
+let pool = [];
 let ranking = [];
 let userName = "";
 
-/* THEME */
+/* ===== THEME ===== */
 function toggleTheme() {
     document.body.classList.toggle("light");
 }
 
-/* START */
+/* ===== START ===== */
 function startApp() {
     userName = document.getElementById("username").value.trim();
     if (!userName) return alert("Введите имя");
+
+    pool = girls.includes(userName) ? [...boys] : [...girls];
 
     document.getElementById("login").style.display = "none";
     document.getElementById("game").style.display = "block";
     nextRound();
 }
 
-/* ROUND */function nextRound() {
+/* ===== ROUND ===== */
+function nextRound() {
 
-    if (names.length === 1) {
-        ranking.unshift(names[0]);
+    if (pool.length === 1) {
+        ranking.unshift(pool[0]);
         showTop();
         sendToGoogle();
         return;
     }
 
-    let a = names.shift();
-    let b = names.shift();
+    let a = pool.shift();
+    let b = pool.shift();
 
     let battle = document.getElementById("battle");
     battle.innerHTML = "";
@@ -235,7 +235,7 @@ function startApp() {
     battle.appendChild(makeChoice(b, a));
 }
 
-/* CARD */
+/* ===== CARD ===== */
 function makeChoice(name, other) {
 
     let div = document.createElement("div");
@@ -243,21 +243,17 @@ function makeChoice(name, other) {
     div.innerText = name;
 
     div.onclick = (e) => {
-
         if (navigator.vibrate) navigator.vibrate(30);
-
         showHeart(e.clientX, e.clientY);
-
-        names.push(name);
+        pool.push(name);
         ranking.unshift(other);
-
         nextRound();
     };
 
     return div;
 }
 
-/* HEART */
+/* ===== HEART ===== */
 function showHeart(x, y) {
     let h = document.createElement("div");
     h.className = "heart";
@@ -268,7 +264,7 @@ function showHeart(x, y) {
     setTimeout(() => h.remove(), 1000);
 }
 
-/* TOP */
+/* ===== TOP ===== */
 function showTop() {
     document.getElementById("game").style.display = "none";
     let r = document.getElementById("result");
@@ -282,7 +278,7 @@ function showTop() {
     `;
 }
 
-/* GOOGLE */
+/* ===== GOOGLE SHEETS ===== */
 function sendToGoogle() {
 
     let url = "https://docs.google.com/forms/d/e/1FAIpQLSdjxIqr3wttTjMFRQH99vHdvNEHALEA1oOI8rU_n-vE0-5W0Q/formResponse";

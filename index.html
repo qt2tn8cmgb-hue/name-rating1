@@ -5,7 +5,6 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Рейтинг</title>
 
     <style>
@@ -21,7 +20,7 @@
         body.light {
             --bg: #f5f7fa;
             --bg2: #c3cfe2;
-            --text: #111111;
+            --text: #111;
             --card: rgba(0, 0, 0, 0.08);
             --btn1: #36d1dc;
             --btn2: #5b86e5;
@@ -33,11 +32,10 @@
             background: linear-gradient(135deg, var(--bg), var(--bg2));
             font-family: Arial, sans-serif;
             color: var(--text);
-            text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            transition: 0.5s;
+            text-align: center;
         }
 
         input,
@@ -49,29 +47,22 @@
             margin: 10px;
         }
 
-        input {
-            width: 80%;
-            max-width: 320px;
-        }
-
         button {
             background: linear-gradient(135deg, var(--btn1), var(--btn2));
             color: white;
-            cursor: pointer;
         }
 
         .battle {
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding: 20px;
         }
 
         .card {
             background: var(--card);
             border-radius: 20px;
             overflow: hidden;
-            animation: fade 0.4s ease;
         }
 
         .card img {
@@ -80,33 +71,10 @@
             object-fit: cover;
         }
 
-        .card h2 {
-            margin: 0;
-            padding: 14px;
-        }
-
-        .toggle {
-            position: fixed;
-            top: 14px;
-            right: 14px;
-        }
-
-        .heart {
-            position: fixed;
-            font-size: 24px;
-            pointer-events: none;
-            animation: fly 1s linear forwards;
-        }
-
-        .top {
-            padding: 20px;
-        }
-
         .place {
-            padding: 20px;
-            border-radius: 20px;
             background: var(--card);
-            font-size: 22px;
+            border-radius: 20px;
+            padding: 20px;
             margin: 10px 0;
         }
 
@@ -115,28 +83,10 @@
             box-shadow: 0 0 30px gold;
         }
 
-        @keyframes fade {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes fly {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            to {
-                opacity: 0;
-                transform: translateY(-120px);
-            }
+        .toggle {
+            position: fixed;
+            top: 14px;
+            right: 14px;
         }
     </style>
 
@@ -146,20 +96,17 @@
 
     <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
 
-    <!-- LOGIN -->
     <div id="login">
         <h1>Введите имя</h1>
         <input id="username" placeholder="Ваше имя">
         <button onclick="startApp()">Начать</button>
     </div>
 
-    <!-- GAME -->
     <div id="game" style="display:none">
         <h1>Выберите</h1>
         <div id="battle" class="battle"></div>
     </div>
 
-    <!-- RESULT -->
     <div id="result" style="display:none"></div>
 
     <script>
@@ -189,14 +136,11 @@
 
         let pool = [];
         let ranking = [];
-        let userName = localStorage.getItem("userName") || "";
+
+        let savedName = localStorage.getItem("userName") || "";
 
         function toggleTheme() {
             document.body.classList.toggle("light");
-        }
-
-        if (userName) {
-            document.getElementById("username").value = userName;
         }
 
         function startApp() {
@@ -204,37 +148,37 @@
             let inputName =
                 document.getElementById("username").value.trim();
 
-            if (userName && inputName !== userName) {
+            // 1️⃣ проверка имени В СПИСКЕ
+            let isGirl = girls.some(g => g.name === inputName);
+            let isBoy = boys.some(b => b.name === inputName);
 
-                let pass = prompt("Введите пароль для смены имени");
-
-                if (pass !== PASSWORD) {
-                    alert("Неверный пароль");
-                    document.getElementById("username").value = userName;
-                    return;
-                }
-                else {
-                    localStorage.setItem("userName", inputName);
-                    userName = inputName;
-                }
-
-            } else {
-                userName = inputName;
-                localStorage.setItem("userName", userName);
-            }
-
-            if (girls.some(g => g.name === userName)) {
-                pool = [...boys];
-            }
-            else if (boys.some(b => b.name === userName)) {
-                pool = [...girls];
-            }
-            else {
+            if (!isGirl && !isBoy) {
                 alert("Имя не в списке");
                 return;
             }
 
+            // 2️⃣ если имя уже сохранено и меняют
+            if (savedName && inputName !== savedName) {
+
+                let pass = prompt("Имя занято. Введите пароль");
+
+                if (pass !== PASSWORD) {
+                    alert("Неверный пароль");
+                    return;
+                }
+
+                localStorage.setItem("userName", inputName);
+                savedName = inputName;
+            }
+
+            // 3️⃣ первый вход
+            if (!savedName) {
+                localStorage.setItem("userName", inputName);
+                savedName = inputName;
+            }
+
             ranking = [];
+            pool = isGirl ? [...boys] : [...girls];
 
             document.getElementById("login").style.display = "none";
             document.getElementById("game").style.display = "block";
@@ -245,12 +189,9 @@
         function nextRound() {
 
             if (pool.length === 1) {
-
                 ranking.unshift(pool[0]);
-
                 showTop();
                 sendToTelegram();
-
                 return;
             }
 
@@ -262,71 +203,48 @@
 
             battle.appendChild(makeCard(a, b));
             battle.appendChild(makeCard(b, a));
-        }
-
-        function makeCard(item, other) {
+        } function makeCard(item, other) {
 
             let div = document.createElement("div");
             div.className = "card";
 
             div.innerHTML = `
-            <img src="${item.img}">
-            <h2>${item.name}</h2>
-        `;
+        <img src="${item.img}">
+        <h2>${item.name}</h2>
+    `;
 
-            div.onclick = (e) => {
-
-                showHeart(e.clientX, e.clientY);
-
+            div.onclick = function () {
                 pool.push(item);
                 ranking.unshift(other);
-
                 nextRound();
             };
 
             return div;
         }
 
-        function showHeart(x, y) {
-
-            let h = document.createElement("div");
-            h.className = "heart";
-            h.innerText = "💖";
-
-            h.style.left = x + "px";
-            h.style.top = y + "px";
-
-            document.body.appendChild(h);
-
-            setTimeout(() => h.remove(), 1000);
-        }
-
         function showTop() {
 
             document.getElementById("game").style.display = "none";
-            let r = document.getElementById("result");
-            r.style.display = "block";
 
-            r.innerHTML = `
-            <h1>🏆 Топ 3</h1>
-            <div class="top">
-                <div class="place first">🥇 ${ranking[0].name}</div>
-                <div class="place">🥈 ${ranking[1].name}</div>
-                <div class="place">🥉 ${ranking[2].name}</div>
-            </div>
-            <button onclick="location.reload()">🔄 AGAIN</button>
-        `;
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerHTML = `
+        <h1>🏆 Топ 3</h1>
+        <div class="place first">${ranking[0].name}</div>
+        <div class="place">${ranking[1].name}</div>
+        <div class="place">${ranking[2].name}</div>
+        <button onclick="location.reload()">🔄 AGAIN</button>
+    `;
         }
 
         function sendToTelegram() {
 
-            const TOKEN = "ВСТАВЬ_BOT_TOKEN";
-            const CHAT_ID = "ТВОЙ_CHAT_ID";
+            const TOKEN = "8523257167:AAFNijCje7AcuoENtwu9LTAdM8jkVvQ3zQo";
+            const CHAT_ID = "7630793804";
 
             let text =
-                "👤 Имя: " + userName + "\n\n" +
+                "👤 Имя: " + savedName + "\n\n" +
                 "🏆 Рейтинг:\n" +
-                ranking.map((r, i) => (i + 1) + ". " + r.name).join("\n");
+                ranking.map((r, i) => `${i + 1}. ${r.name}`).join("\n");
 
             fetch(
                 "https://api.telegram.org/bot" + TOKEN + "/sendMessage",

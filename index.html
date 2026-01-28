@@ -9,21 +9,20 @@
     <title>Рейтинг</title>
 
     <style>
-
         :root {
-            --bg:   #0f2027;
-            --bg2:  #203a43;
+            --bg: #0f2027;
+            --bg2: #203a43;
             --text: #ffffff;
-            --card: rgba(255,255,255,0.1);
+            --card: rgba(255, 255, 255, 0.1);
             --btn1: #ff416c;
             --btn2: #ff4b2b;
         }
 
         body.light {
-            --bg:   #f5f7fa;
-            --bg2:  #c3cfe2;
+            --bg: #f5f7fa;
+            --bg2: #c3cfe2;
             --text: #111111;
-            --card: rgba(0,0,0,0.08);
+            --card: rgba(0, 0, 0, 0.08);
             --btn1: #36d1dc;
             --btn2: #5b86e5;
         }
@@ -31,21 +30,13 @@
         body {
             margin: 0;
             min-height: 100vh;
-
-            background: linear-gradient(
-                135deg,
-                var(--bg),
-                var(--bg2)
-            );
-
+            background: linear-gradient(135deg, var(--bg), var(--bg2));
             font-family: Arial, sans-serif;
             color: var(--text);
             text-align: center;
-
             display: flex;
             flex-direction: column;
             justify-content: center;
-
             transition: 0.5s;
         }
 
@@ -64,12 +55,7 @@
         }
 
         button {
-            background: linear-gradient(
-                135deg,
-                var(--btn1),
-                var(--btn2)
-            );
-
+            background: linear-gradient(135deg, var(--btn1), var(--btn2));
             color: white;
             cursor: pointer;
         }
@@ -85,7 +71,6 @@
             background: var(--card);
             border-radius: 20px;
             overflow: hidden;
-
             animation: fade 0.4s ease;
         }
 
@@ -110,7 +95,6 @@
             position: fixed;
             font-size: 24px;
             pointer-events: none;
-
             animation: fly 1s linear forwards;
         }
 
@@ -136,6 +120,7 @@
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -147,92 +132,96 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateY(-120px);
             }
         }
-
     </style>
 
 </head>
 
 <body>
 
-    <button class="toggle" onclick="toggleTheme()">
-        🌙 / ☀️
-    </button>
+    <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
 
     <!-- LOGIN -->
     <div id="login">
-
         <h1>Введите имя</h1>
-
-        <input
-            id="username"
-            placeholder="Ваше имя"
-        >
-
-        <button onclick="startApp()">
-            Начать
-        </button>
-
+        <input id="username" placeholder="Ваше имя">
+        <button onclick="startApp()">Начать</button>
     </div>
 
     <!-- GAME -->
     <div id="game" style="display:none">
-
         <h1>Выберите</h1>
-
-        <div
-            id="battle"
-            class="battle"
-        ></div>
-
+        <div id="battle" class="battle"></div>
     </div>
 
     <!-- RESULT -->
-    <div
-        id="result"
-        style="display:none"
-    ></div>
+    <div id="result" style="display:none"></div>
 
     <script>
 
+        const PASSWORD = "yamakasi";
+
         const girls = [
-            { name: "Селен",     img: "images/selen.jpg" },
-            { name: "Шахноза",   img: "images/shakhnoza.jpg" },
-            { name: "Мубина",    img: "images/mubina.jpg" },
-            { name: "Ями",       img: "images/yami.jpg" },{ name: "Розия",     img: "images/roziya.jpg" },
-            { name: "Малика",    img: "images/malika.jpg" },
-            { name: "Аиша",      img: "images/aisha.jpg" }
+            { name: "Селен", img: "images/selen.jpg" },
+            { name: "Шахноза", img: "images/shakhnoza.jpg" },
+            { name: "Мубина", img: "images/mubina.jpg" },
+            { name: "Ями", img: "images/yami.jpg" },
+            { name: "Розия", img: "images/roziya.jpg" },
+            { name: "Малика", img: "images/malika.jpg" },
+            { name: "Аиша", img: "images/aisha.jpg" }
         ];
 
         const boys = [
-            { name: "Азизбек",    img: "images/azizbek.jpg" },
-            { name: "Абдуллох",   img: "images/abdulloh.jpg" },
-            { name: "Исроил",     img: "images/isroil.jpg" },
-            { name: "Асадбек",    img: "images/asadbek.jpg" },
-            { name: "Тимур",      img: "images/timur.jpg" },
-            { name: "Имран",      img: "images/imran.jpg" },
-            { name: "Исфандиор",  img: "images/isfandiyor.jpg" },
+            { name: "Азизбек", img: "images/azizbek.jpg" },
+            { name: "Абдуллох", img: "images/abdulloh.jpg" },
+            { name: "Исроил", img: "images/isroil.jpg" },
+            { name: "Асадбек", img: "images/asadbek.jpg" },
+            { name: "Тимур", img: "images/timur.jpg" },
+            { name: "Имран", img: "images/imran.jpg" },
+            { name: "Исфандиор", img: "images/isfandiyor.jpg" },
+            { name: "Борис", img: "images/boris.jpg" }
         ];
 
-        let pool    = [];
+        let pool = [];
         let ranking = [];
-        let userName = "";
+        let userName = localStorage.getItem("userName") || "";
 
         function toggleTheme() {
             document.body.classList.toggle("light");
         }
 
+        if (userName) {
+            document.getElementById("username").value = userName;
+        }
+
         function startApp() {
 
-            userName =
-                document
-                    .getElementById("username")
-                    .value
-                    .trim();
+            let inputName =
+                document.getElementById("username").value.trim();
+
+            if (userName && inputName !== userName) {
+
+                let pass = prompt("Введите пароль для смены имени");
+
+                if (pass !== PASSWORD) {
+                    alert("Неверный пароль");
+                    document.getElementById("username").value = userName;
+                    return;
+                }
+                else {
+                    localStorage.setItem("userName", inputName);
+                    userName = inputName;
+                }
+
+            } else {
+                userName = inputName;
+                localStorage.setItem("userName", userName);
+            }
 
             if (girls.some(g => g.name === userName)) {
                 pool = [...boys];
@@ -245,8 +234,10 @@
                 return;
             }
 
+            ranking = [];
+
             document.getElementById("login").style.display = "none";
-            document.getElementById("game").style.display  = "block";
+            document.getElementById("game").style.display = "block";
 
             nextRound();
         }
@@ -263,21 +254,14 @@
                 return;
             }
 
-            let first  = pool.shift();
-            let second = pool.shift();
+            let a = pool.shift();
+            let b = pool.shift();
 
-            let battle =
-                document.getElementById("battle");
-
+            let battle = document.getElementById("battle");
             battle.innerHTML = "";
 
-            battle.appendChild(
-                makeCard(first, second)
-            );
-
-            battle.appendChild(
-                makeCard(second, first)
-            );
+            battle.appendChild(makeCard(a, b));
+            battle.appendChild(makeCard(b, a));
         }
 
         function makeCard(item, other) {
@@ -286,16 +270,13 @@
             div.className = "card";
 
             div.innerHTML = `
-                <img src="${item.img}">
-                <h2>${item.name}</h2>
-            `;
+            <img src="${item.img}">
+            <h2>${item.name}</h2>
+        `;
 
-            div.onclick = function (e) {
+            div.onclick = (e) => {
 
-                showHeart(
-                    e.clientX,
-                    e.clientY
-                );
+                showHeart(e.clientX, e.clientY);
 
                 pool.push(item);
                 ranking.unshift(other);
@@ -309,73 +290,49 @@
         function showHeart(x, y) {
 
             let h = document.createElement("div");
-
             h.className = "heart";
             h.innerText = "💖";
 
             h.style.left = x + "px";
-            h.style.top  = y + "px";
+            h.style.top = y + "px";
 
             document.body.appendChild(h);
 
-            setTimeout(
-                () => h.remove(),
-                1000
-            );
+            setTimeout(() => h.remove(), 1000);
         }
 
         function showTop() {
 
             document.getElementById("game").style.display = "none";
+            let r = document.getElementById("result");
+            r.style.display = "block";
 
-            let result =
-                document.getElementById("result");
-
-            result.style.display = "block";
-
-            result.innerHTML = `
-                <h1>🏆 Топ 3</h1>
-
-                <div class="top">
-                    <div class="place first">
-                        🥇 ${ranking[0].name}
-                    </div>
-                    <div class="place">
-                        🥈 ${ranking[1].name}
-                    </div>
-                    <div class="place">
-                        🥉 ${ranking[2].name}
-                    </div>
-                </div>
-            `;
+            r.innerHTML = `
+            <h1>🏆 Топ 3</h1>
+            <div class="top">
+                <div class="place first">🥇 ${ranking[0].name}</div>
+                <div class="place">🥈 ${ranking[1].name}</div>
+                <div class="place">🥉 ${ranking[2].name}</div>
+            </div>
+            <button onclick="location.reload()">🔄 AGAIN</button>
+        `;
         }
 
         function sendToTelegram() {
 
-            const TOKEN =
-                "8523257167:AAFNijCje7AcuoENtwu9LTAdM8jkVvQ3zQo";
-
-            const CHAT_ID =
-                "7630793804";
+            const TOKEN = "ВСТАВЬ_BOT_TOKEN";
+            const CHAT_ID = "ТВОЙ_CHAT_ID";
 
             let text =
-                "👤 Имя: " + userName + "\n\n" +"🏆 Рейтинг:\n" +
-                ranking
-                    .map(
-                        (r, i) =>
-                            (i + 1) + ". " + r.name
-                    )
-                    .join("\n");
+                "👤 Имя: " + userName + "\n\n" +
+                "🏆 Рейтинг:\n" +
+                ranking.map((r, i) => (i + 1) + ". " + r.name).join("\n");
 
             fetch(
-                "https://api.telegram.org/bot" +
-                TOKEN +
-                "/sendMessage",
+                "https://api.telegram.org/bot" + TOKEN + "/sendMessage",
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         chat_id: CHAT_ID,
                         text: text
@@ -387,4 +344,5 @@
     </script>
 
 </body>
+
 </html>

@@ -131,7 +131,6 @@
             { name: "Тимур", img: "images/timur.jpg" },
             { name: "Имран", img: "images/imran.jpg" },
             { name: "Исфандиор", img: "images/isfandiyor.jpg" },
-            { name: "Борис", img: "images/boris.jpg" }
         ];
 
         let pool = [];
@@ -160,7 +159,7 @@
             // 2️⃣ если имя уже сохранено и меняют
             if (savedName && inputName !== savedName) {
 
-                let pass = prompt("Имя занято. Введите пароль");
+                let pass = prompt("Введите пароль чтоб поменять пароль");
 
                 if (pass !== PASSWORD) {
                     alert("Неверный пароль");

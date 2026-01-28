@@ -5,147 +5,115 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choice</title>
+    <title>Рейтинг</title>
 
     <style>
-        /* ===== RESET ===== */
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* ===== THEMES ===== */
         :root {
-            --bg: #0b0f1a;
-            --bg2: #141a2e;
-            --card: rgba(255, 255, 255, 0.08);
+            --bg: #0f2027;
+            --bg2: #203a43;
             --text: #ffffff;
-            --accent: #ff4b7d;
+            --card: rgba(255, 255, 255, 0.1);
+            --btn1: #ff416c;
+            --btn2: #ff4b2b;
         }
 
         body.light {
-            --bg: #f4f6fb;
-            --bg2: #e3e8f3;
-            --card: rgba(0, 0, 0, 0.06);
+            --bg: #f5f7fa;
+            --bg2: #c3cfe2;
             --text: #111;
-            --accent: #4f7cff;
+            --card: rgba(0, 0, 0, 0.08);
+            --btn1: #36d1dc;
+            --btn2: #5b86e5;
         }
 
-        /* ===== BODY ===== */
         body {
             margin: 0;
-            height: 100vh;
-            background: linear-gradient(180deg, var(--bg), var(--bg2));
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro", Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg), var(--bg2));
+            font-family: Arial, sans-serif;
             color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.4s;
-        }
+            text-align: center;
 
-        /* ===== APP CONTAINER ===== */
-        .app {
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            padding: 24px 18px env(safe-area-inset-bottom);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transition: 0.5s;
         }
 
-        /* ===== TEXT ===== */
         h1 {
-            font-size: 28px;
-            margin-bottom: 24px;
-            text-align: center;
+            margin-bottom: 20px;
         }
 
-        /* ===== INPUT ===== */
+        input,
+        button {
+            padding: 18px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            margin: 10px;
+        }
+
         input {
-            width: 100%;
-            padding: 18px;
-            font-size: 18px;
-            border-radius: 18px;
-            border: none;
-            background: var(--card);
-            color: var(--text);
-            outline: none;
+            width: 80%;
+            max-width: 320px;
         }
 
-        /* ===== START BUTTON ===== */
-        .start-btn {
-            margin-top: 20px;
-            padding: 18px;
-            font-size: 18px;
-            border-radius: 18px;
-            border: none;
-            background: var(--accent);
+        button {
+            background: linear-gradient(135deg, var(--btn1), var(--btn2));
             color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        /* ===== BATTLE ===== */
+        button:active {
+            transform: scale(0.94);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
         .battle {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
+            padding: 20px;
         }
 
-        /* ===== CHOICE CARD ===== */
-        .choice {
-            padding: 26px;
-            border-radius: 22px;
+        .card {
             background: var(--card);
-            font-size: 22px;
-            text-align: center;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            transition: transform 0.15s, box-shadow 0.15s;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fade 0.5s ease;
         }
 
-        .choice:active {
-            transform: scale(0.96);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+        .card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
         }
 
-        /* ===== TOGGLE ===== */
-        .toggle {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            padding: 10px 14px;
-            border-radius: 14px;
-            background: var(--card);
-            border: none;
-            color: var(--text);
+        .card h2 {
+            padding: 14px;
+            margin: 0;
         }
 
-        /* ===== HEART ===== */
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         .heart {
             position: fixed;
-            font-size: 26px;
-            animation: fly 1s ease forwards;
+            font-size: 24px;
+            animation: fly 1s linear forwards;
             pointer-events: none;
         }
 
-        /* ===== TOP ===== */
-        .place {
-            padding: 24px;
-            border-radius: 22px;
-            background: var(--card);
-            font-size: 22px;
-            margin-bottom: 16px;
-            animation: pop 0.4s ease;
-        }
-
-        .first {
-            font-size: 30px;
-            box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
-            animation: winner 1.2s infinite alternate;
-        }
-
-        /* ===== ANIMATIONS ===== */
         @keyframes fly {
             from {
                 opacity: 1;
@@ -158,26 +126,31 @@
             }
         }
 
-        @keyframes pop {
-            from {
-                opacity: 0;
-                transform: scale(0.85);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .toggle {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            padding: 10px 16px;
+            font-size: 14px;
         }
 
-        @keyframes winner {
-            from {
-                transform: scale(1);
-            }
+        .top {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
+        }
 
-            to {
-                transform: scale(1.05);
-            }
+        .place {
+            padding: 20px;
+            border-radius: 20px;
+            background: var(--card);
+            font-size: 22px;
+        }
+
+        .first {
+            font-size: 28px;
+            box-shadow: 0 0 30px gold;
         }
     </style>
 </head>
@@ -186,56 +159,72 @@
 
     <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
 
-    <div class="app">
-
-        <!-- LOGIN -->
-        <div id="login">
-            <h1>Введите имя</h1>
-            <input id="username" placeholder="Ваше имя">
-            <button class="start-btn" onclick="startApp()">Начать</button>
-        </div>
-
-        <!-- GAME -->
-        <div id="game" style="display:none">
-            <h1>Выберите</h1>
-            <div id="battle" class="battle"></div>
-        </div>
-
-        <!-- RESULT -->
-        <div id="result" style="display:none"></div>
-
+    <!-- LOGIN -->
+    <div id="login">
+        <h1>Введите имя</h1>
+        <input id="username" placeholder="Ваше имя">
+        <button onclick="startApp()">Начать</button>
     </div>
+
+    <!-- GAME -->
+    <div id="game" style="display:none">
+        <h1>Выберите</h1>
+        <div id="battle" class="battle"></div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" style="display:none"></div>
 
     <script>
 
-        /* ===== NAMES ===== */
-        const girls = ["Селен", "Шахноза", "Мубина", "Ями", "Розия", "Малика", "Аиша"];
-        const boys = ["Азизбек", "Абдуллох", "Исроил", "Асадбек", "Тимур", "Имран", "Исфандиор", "Борис"];
+        const girls = [
+            { name: "Селен", img: "images/selen.jpg" },
+            { name: "Шахноза", img: "images/shakhnoza.jpg" },
+            { name: "Мубина", img: "images/mubina.jpg" },
+            { name: "Ями", img: "images/yami.jpg" },
+            { name: "Розия", img: "images/roziya.jpg" },
+            { name: "Малика", img: "images/malika.jpg" },
+            { name: "Аиша", img: "images/aisha.jpg" }
+        ];
+
+        const boys = [
+            { name: "Азизбек", img: "images/azizbek.jpg" },
+            { name: "Абдуллох", img: "images/abdulloh.jpg" },
+            { name: "Исроил", img: "images/isroil.jpg" },
+            { name: "Асадбек", img: "images/asadbek.jpg" },
+            { name: "Тимур", img: "images/timur.jpg" },
+            { name: "Имран", img: "images/imran.jpg" },
+            { name: "Исфандиор", img: "images/isfandiyor.jpg" },
+            { name: "Борис", img: "images/boris.jpg" }
+        ];
 
         let pool = [];
         let ranking = [];
         let userName = "";
 
-        /* ===== THEME ===== */
         function toggleTheme() {
             document.body.classList.toggle("light");
         }
 
-        /* ===== START ===== */
         function startApp() {
-            userName = document.getElementById("username").value.trim();
-            if (!userName) return alert("Введите имя");
 
-            pool = girls.includes(userName) ? [...boys] : [...girls];
+            userName = document.getElementById("username").value.trim();
+
+            if (girls.some(g => g.name === userName)) {
+                pool = [...boys];
+            } else if (boys.some(b => b.name === userName)) {
+                pool = [...girls];
+            } else {
+                alert("Имя не в списке");
+                return;
+            }
 
             document.getElementById("login").style.display = "none";
             document.getElementById("game").style.display = "block";
             nextRound();
         }
 
-        /* ===== ROUND ===== */
         function nextRound() {
-
             if (pool.length === 1) {
                 ranking.unshift(pool[0]);
                 showTop();
@@ -249,21 +238,23 @@
             let battle = document.getElementById("battle");
             battle.innerHTML = "";
 
-            battle.appendChild(makeChoice(a, b));
-            battle.appendChild(makeChoice(b, a));
+            battle.appendChild(makeCard(a, b));
+            battle.appendChild(makeCard(b, a));
         }
 
-        /* ===== CARD ===== */
-        function makeChoice(name, other) {
+        function makeCard(item, other) {
 
             let div = document.createElement("div");
-            div.className = "choice";
-            div.innerText = name;
+            div.className = "card";
+
+            div.innerHTML = `
+        <img src="${item.img}">
+        <h2>${item.name}</h2>
+    `;
 
             div.onclick = (e) => {
-                if (navigator.vibrate) navigator.vibrate(30);
                 showHeart(e.clientX, e.clientY);
-                pool.push(name);
+                pool.push(item);
                 ranking.unshift(other);
                 nextRound();
             };
@@ -271,7 +262,6 @@
             return div;
         }
 
-        /* ===== HEART ===== */
         function showHeart(x, y) {
             let h = document.createElement("div");
             h.className = "heart";
@@ -282,28 +272,29 @@
             setTimeout(() => h.remove(), 1000);
         }
 
-        /* ===== TOP ===== */
         function showTop() {
+
             document.getElementById("game").style.display = "none";
             let r = document.getElementById("result");
             r.style.display = "block";
 
             r.innerHTML = `
         <h1>🏆 Топ 3</h1>
-        <div class="place first">🥇 ${ranking[0]}</div>
-        <div class="place">🥈 ${ranking[1]}</div>
-        <div class="place">🥉 ${ranking[2]}</div>
+        <div class="top">
+            <div class="place first">🥇 ${ranking[0].name}</div>
+            <div class="place">🥈 ${ranking[1].name}</div>
+            <div class="place">🥉 ${ranking[2].name}</div>
+        </div>
     `;
         }
 
-        /* ===== GOOGLE SHEETS ===== */
         function sendToGoogle() {
 
             let url = "https://docs.google.com/forms/d/e/1FAIpQLSdjxIqr3wttTjMFRQH99vHdvNEHALEA1oOI8rU_n-vE0-5W0Q/formResponse";
 
             let data = new FormData();
             data.append("entry.2137641526", userName);
-            data.append("entry.42689067", ranking.join(" → "));
+            data.append("entry.42689067", ranking.map(r => r.name).join(" → "));
 
             fetch(url, { method: "POST", mode: "no-cors", body: data });
         }

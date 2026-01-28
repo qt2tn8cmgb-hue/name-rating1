@@ -5,23 +5,25 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Рейтинг</title>
 
     <style>
+
         :root {
-            --bg: #0f2027;
-            --bg2: #203a43;
+            --bg:   #0f2027;
+            --bg2:  #203a43;
             --text: #ffffff;
-            --card: rgba(255, 255, 255, 0.1);
+            --card: rgba(255,255,255,0.1);
             --btn1: #ff416c;
             --btn2: #ff4b2b;
         }
 
         body.light {
-            --bg: #f5f7fa;
-            --bg2: #c3cfe2;
-            --text: #111;
-            --card: rgba(0, 0, 0, 0.08);
+            --bg:   #f5f7fa;
+            --bg2:  #c3cfe2;
+            --text: #111111;
+            --card: rgba(0,0,0,0.08);
             --btn1: #36d1dc;
             --btn2: #5b86e5;
         }
@@ -29,7 +31,13 @@
         body {
             margin: 0;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--bg), var(--bg2));
+
+            background: linear-gradient(
+                135deg,
+                var(--bg),
+                var(--bg2)
+            );
+
             font-family: Arial, sans-serif;
             color: var(--text);
             text-align: center;
@@ -37,11 +45,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            transition: 0.5s;
-        }
 
-        h1 {
-            margin-bottom: 20px;
+            transition: 0.5s;
         }
 
         input,
@@ -59,15 +64,14 @@
         }
 
         button {
-            background: linear-gradient(135deg, var(--btn1), var(--btn2));
+            background: linear-gradient(
+                135deg,
+                var(--btn1),
+                var(--btn2)
+            );
+
             color: white;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.94);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         .battle {
@@ -81,7 +85,8 @@
             background: var(--card);
             border-radius: 20px;
             overflow: hidden;
-            animation: fade 0.5s ease;
+
+            animation: fade 0.4s ease;
         }
 
         .card img {
@@ -91,53 +96,25 @@
         }
 
         .card h2 {
-            padding: 14px;
             margin: 0;
-        }
-
-        @keyframes fade {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .heart {
-            position: fixed;
-            font-size: 24px;
-            animation: fly 1s linear forwards;
-            pointer-events: none;
-        }
-
-        @keyframes fly {
-            from {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-            to {
-                opacity: 0;
-                transform: translateY(-120px) scale(1.6);
-            }
+            padding: 14px;
         }
 
         .toggle {
             position: fixed;
             top: 14px;
             right: 14px;
-            padding: 10px 16px;
-            font-size: 14px;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+
+            animation: fly 1s linear forwards;
         }
 
         .top {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
             padding: 20px;
         }
 
@@ -146,58 +123,102 @@
             border-radius: 20px;
             background: var(--card);
             font-size: 22px;
+            margin: 10px 0;
         }
 
         .first {
             font-size: 28px;
             box-shadow: 0 0 30px gold;
         }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fly {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-120px);
+            }
+        }
+
     </style>
+
 </head>
 
 <body>
 
-    <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    <button class="toggle" onclick="toggleTheme()">
+        🌙 / ☀️
+    </button>
 
     <!-- LOGIN -->
     <div id="login">
+
         <h1>Введите имя</h1>
-        <input id="username" placeholder="Ваше имя">
-        <button onclick="startApp()">Начать</button>
+
+        <input
+            id="username"
+            placeholder="Ваше имя"
+        >
+
+        <button onclick="startApp()">
+            Начать
+        </button>
+
     </div>
 
     <!-- GAME -->
     <div id="game" style="display:none">
+
         <h1>Выберите</h1>
-        <div id="battle" class="battle"></div>
+
+        <div
+            id="battle"
+            class="battle"
+        ></div>
+
     </div>
 
     <!-- RESULT -->
-    <div id="result" style="display:none"></div>
+    <div
+        id="result"
+        style="display:none"
+    ></div>
 
     <script>
 
         const girls = [
-            { name: "Селен", img: "images/selen.jpg" },
-            { name: "Шахноза", img: "images/shakhnoza.jpg" },
-            { name: "Мубина", img: "images/mubina.jpg" },
-            { name: "Ями", img: "images/yami.jpg" },
-            { name: "Розия", img: "images/roziya.jpg" },
-            { name: "Малика", img: "images/malika.jpg" },
-            { name: "Аиша", img: "images/aisha.jpg" }
+            { name: "Селен",     img: "images/selen.jpg" },
+            { name: "Шахноза",   img: "images/shakhnoza.jpg" },
+            { name: "Мубина",    img: "images/mubina.jpg" },
+            { name: "Ями",       img: "images/yami.jpg" },{ name: "Розия",     img: "images/roziya.jpg" },
+            { name: "Малика",    img: "images/malika.jpg" },
+            { name: "Аиша",      img: "images/aisha.jpg" }
         ];
 
         const boys = [
-            { name: "Азизбек", img: "images/azizbek.jpg" },
-            { name: "Абдуллох", img: "images/abdulloh.jpg" },
-            { name: "Исроил", img: "images/isroil.jpg" },
-            { name: "Асадбек", img: "images/asadbek.jpg" },
-            { name: "Тимур", img: "images/timur.jpg" },
-            { name: "Имран", img: "images/imran.jpg" },
-            { name: "Исфандиор", img: "images/isfandiyor.jpg" },
+            { name: "Азизбек",    img: "images/azizbek.jpg" },
+            { name: "Абдуллох",   img: "images/abdulloh.jpg" },
+            { name: "Исроил",     img: "images/isroil.jpg" },
+            { name: "Асадбек",    img: "images/asadbek.jpg" },
+            { name: "Тимур",      img: "images/timur.jpg" },
+            { name: "Имран",      img: "images/imran.jpg" },
+            { name: "Исфандиор",  img: "images/isfandiyor.jpg" },
         ];
 
-        let pool = [];
+        let pool    = [];
         let ranking = [];
         let userName = "";
 
@@ -207,38 +228,56 @@
 
         function startApp() {
 
-            userName = document.getElementById("username").value.trim();
+            userName =
+                document
+                    .getElementById("username")
+                    .value
+                    .trim();
 
             if (girls.some(g => g.name === userName)) {
                 pool = [...boys];
-            } else if (boys.some(b => b.name === userName)) {
+            }
+            else if (boys.some(b => b.name === userName)) {
                 pool = [...girls];
-            } else {
+            }
+            else {
                 alert("Имя не в списке");
                 return;
             }
 
             document.getElementById("login").style.display = "none";
-            document.getElementById("game").style.display = "block";
+            document.getElementById("game").style.display  = "block";
+
             nextRound();
         }
 
         function nextRound() {
+
             if (pool.length === 1) {
+
                 ranking.unshift(pool[0]);
+
                 showTop();
-                sendToGoogle();
+                sendToTelegram();
+
                 return;
             }
 
-            let a = pool.shift();
-            let b = pool.shift();
+            let first  = pool.shift();
+            let second = pool.shift();
 
-            let battle = document.getElementById("battle");
+            let battle =
+                document.getElementById("battle");
+
             battle.innerHTML = "";
 
-            battle.appendChild(makeCard(a, b));
-            battle.appendChild(makeCard(b, a));
+            battle.appendChild(
+                makeCard(first, second)
+            );
+
+            battle.appendChild(
+                makeCard(second, first)
+            );
         }
 
         function makeCard(item, other) {
@@ -247,14 +286,20 @@
             div.className = "card";
 
             div.innerHTML = `
-        <img src="${item.img}">
-        <h2>${item.name}</h2>
-    `;
+                <img src="${item.img}">
+                <h2>${item.name}</h2>
+            `;
 
-            div.onclick = (e) => {
-                showHeart(e.clientX, e.clientY);
+            div.onclick = function (e) {
+
+                showHeart(
+                    e.clientX,
+                    e.clientY
+                );
+
                 pool.push(item);
                 ranking.unshift(other);
+
                 nextRound();
             };
 
@@ -262,44 +307,84 @@
         }
 
         function showHeart(x, y) {
+
             let h = document.createElement("div");
+
             h.className = "heart";
             h.innerText = "💖";
+
             h.style.left = x + "px";
-            h.style.top = y + "px";
+            h.style.top  = y + "px";
+
             document.body.appendChild(h);
-            setTimeout(() => h.remove(), 1000);
+
+            setTimeout(
+                () => h.remove(),
+                1000
+            );
         }
 
         function showTop() {
 
             document.getElementById("game").style.display = "none";
-            let r = document.getElementById("result");
-            r.style.display = "block";
 
-            r.innerHTML = `
-        <h1>🏆 Топ 3</h1>
-        <div class="top">
-            <div class="place first">🥇 ${ranking[0].name}</div>
-            <div class="place">🥈 ${ranking[1].name}</div>
-            <div class="place">🥉 ${ranking[2].name}</div>
-        </div>
-    `;
+            let result =
+                document.getElementById("result");
+
+            result.style.display = "block";
+
+            result.innerHTML = `
+                <h1>🏆 Топ 3</h1>
+
+                <div class="top">
+                    <div class="place first">
+                        🥇 ${ranking[0].name}
+                    </div>
+                    <div class="place">
+                        🥈 ${ranking[1].name}
+                    </div>
+                    <div class="place">
+                        🥉 ${ranking[2].name}
+                    </div>
+                </div>
+            `;
         }
 
-        function sendToGoogle() {
+        function sendToTelegram() {
 
-            let url = "https://docs.google.com/forms/d/e/1FAIpQLSdjxIqr3wttTjMFRQH99vHdvNEHALEA1oOI8rU_n-vE0-5W0Q/formResponse";
+            const TOKEN =
+                "8523257167:AAFNijCje7AcuoENtwu9LTAdM8jkVvQ3zQo";
 
-            let data = new FormData();
-            data.append("entry.2137641526", userName);
-            data.append("entry.42689067", ranking.map(r => r.name).join(" → "));
+            const CHAT_ID =
+                "7630793804";
 
-            fetch(url, { method: "POST", mode: "no-cors", body: data });
+            let text =
+                "👤 Имя: " + userName + "\n\n" +"🏆 Рейтинг:\n" +
+                ranking
+                    .map(
+                        (r, i) =>
+                            (i + 1) + ". " + r.name
+                    )
+                    .join("\n");
+
+            fetch(
+                "https://api.telegram.org/bot" +
+                TOKEN +
+                "/sendMessage",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: text
+                    })
+                }
+            );
         }
 
     </script>
 
 </body>
-
 </html>
